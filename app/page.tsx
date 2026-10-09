@@ -55,6 +55,46 @@ export default function Home() {
     };
   }, []);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+  const clickedSection = useRef<string | null>(null);
+  useEffect(() => {
+    let frame = 0;
+    const updateSection = () => {
+      frame = 0;
+      if (clickedSection.current) return;
+      const sections = mainRef.current?.querySelectorAll<HTMLElement>('section[id]');
+      if (!sections) return;
+      const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 82;
+      const marker = headerHeight + (window.innerHeight - headerHeight) * .45;
+      let current = "home";
+      sections.forEach(section => {
+        if (section.getBoundingClientRect().top <= marker) current = section.id;
+      });
+
+      setActiveSection(current);
+    };
+    const scheduleUpdate = () => { if (!frame) frame = requestAnimationFrame(updateSection); };
+    const resumeScrollTracking = () => { clickedSection.current = null; scheduleUpdate(); };
+    const handleScrollKey = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest('input, textarea, select, [contenteditable="true"], [role="dialog"]')) return;
+      if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(event.key)) resumeScrollTracking();
+    };
+    scheduleUpdate();
+    window.addEventListener('wheel', resumeScrollTracking, { passive: true });
+    window.addEventListener('touchmove', resumeScrollTracking, { passive: true });
+    window.addEventListener('keydown', handleScrollKey);
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('wheel', resumeScrollTracking);
+      window.removeEventListener('touchmove', resumeScrollTracking);
+      window.removeEventListener('keydown', handleScrollKey);
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+    };
+  }, []);
   const [selected, setSelected] = useState<{ title: string; detail: string } | null>(null);
   const [activeWork, setActiveWork] = useState<(typeof works)[number] | null>(null);
   const [galleryIndex, setGalleryIndex] = useState(0);
@@ -67,7 +107,7 @@ export default function Home() {
         <div className="container header-inner">
           <a href="#home" aria-label="100 เรื่องราว Advertising หน้าหลัก" className="brand"><Image src="/logo.png" alt="100 เรื่องราว Advertising" width={2048} height={734} priority className="brand-image" /></a>
           <nav className={menuOpen ? "nav-links is-open" : "nav-links"} aria-label="เมนูหลัก">
-            {[["หน้าแรก", "home"], ["บริการ", "services"], ["ผลงาน", "work"], ["เกี่ยวกับเรา", "about"], ["ติดต่อเรา", "contact"]].map(([name, id]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{name}</a>)}
+            {[["หน้าแรก", "home"], ["บริการ", "services"], ["ผลงาน", "work"], ["ขั้นตอนการทำงาน", "about"], ["ติดต่อเรา", "contact"]].map(([name, id]) => <a key={id} href={`#${id}`} className={activeSection === id ? "active" : undefined} aria-current={activeSection === id ? "location" : undefined} onClick={() => { clickedSection.current = id; setActiveSection(id); setMenuOpen(false); }}>{name}</a>)}
           </nav>
           <a className="button yellow header-cta" href="#contact">ขอใบเสนอราคา <Arrow /></a>
           <button className="menu-toggle" aria-label={menuOpen ? "ปิดเมนู" : "เปิดเมนู"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <Cross2Icon /> : <HamburgerMenuIcon />}</button>
@@ -98,7 +138,7 @@ export default function Home() {
           <section id="contact" className="contact-section"><div className="contact-ribbon cyan" /><div className="contact-ribbon pink" /><div className="container contact-inner"><div><h2>ให้เราเป็นส่วนหนึ่ง<br />ในการสร้างแบรนด์ของคุณ</h2><p>งานโฆษณาคุณภาพ ในราคาที่เหมาะสม<br />ติดต่อเราได้เลยวันนี้</p></div><a href="tel:0972828232" className="phone-pill"><span><MobileIcon width={27} height={27} /></span>097-2828232</a><a href="tel:0972828232" className="contact-pill"><span className="chat-dot"><ChatBubbleIcon width={22} height={22} /></span>ปรึกษาและขอราคา <Arrow /></a></div></section>
         </div>
       </main>
-      <footer className="site-footer"><div className="container footer-inner"><a href="#home" className="footer-brand"><Image src="/logo.png" alt="100 เรื่องราว Advertising" width={2048} height={734} className="brand-image" /></a><nav aria-label="เมนูท้ายเว็บไซต์"><a href="#home">หน้าแรก</a><a href="#services">บริการ</a><a href="#work">ผลงาน</a><a href="#about">เกี่ยวกับเรา</a><a href="#contact">ติดต่อเรา</a></nav><a href="tel:0972828232" className="footer-phone"><MobileIcon /> 097-2828232</a><a href="#home" className="back-top" aria-label="กลับขึ้นด้านบน"><ChevronUpIcon width={22} height={22} aria-hidden="true" /></a></div></footer>
+      <footer className="site-footer"><div className="container footer-inner"><a href="#home" className="footer-brand"><Image src="/logo.png" alt="100 เรื่องราว Advertising" width={2048} height={734} className="brand-image" /></a><nav aria-label="เมนูท้ายเว็บไซต์"><a href="#home">หน้าแรก</a><a href="#services">บริการ</a><a href="#work">ผลงาน</a><a href="#about">ขั้นตอนการทำงาน</a><a href="#contact">ติดต่อเรา</a></nav><a href="tel:0972828232" className="footer-phone"><MobileIcon /> 097-2828232</a><a href="#home" className="back-top" aria-label="กลับขึ้นด้านบน"><ChevronUpIcon width={22} height={22} aria-hidden="true" /></a></div></footer>
       <nav className="floating-contact" aria-label="ช่องทางติดต่อด่วน">
         <a href="https://line.me/ti/p/~100storiess" target="_blank" rel="noopener noreferrer" className="floating-link floating-line" aria-label="แชท LINE 100storiess">
           <span className="floating-label">LINE: 100storiess</span>
