@@ -144,3 +144,27 @@
 .nav-links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 4px; height: 2px; border-radius: 2px; background: var(--yellow); transform: scaleX(0); transform-origin: left; transition: transform .2s ease; }
 .nav-links a.active::after, .nav-links a:hover::after, .nav-links a:focus-visible::after { transform: scaleX(1); }
 @media (max-width: 850px) { .nav-links a::after { right: auto; width: 32px; } }
+
+.hero-qr { display: inline-flex; align-items: center; gap: 14px; margin-top: 22px; padding: 10px 16px 10px 10px; border: 1px solid #ffcf1633; border-radius: 14px; background: #101111b3; }
+.hero-qr-image { display: block; width: 104px; height: 104px; object-fit: contain; border-radius: 6px; flex-shrink: 0; }
+.hero-qr strong { display: block; font-size: 14px; color: var(--yellow); }
+.hero-qr small { display: block; font-size: 12px; color: #ccc; margin-top: 5px; }
+@media (max-width: 600px) { .hero-qr { gap: 12px; margin-top: 20px; } .hero-qr-image { width: 88px; height: 88px; } .hero-qr strong { font-size: 13px; } .hero-qr small { font-size: 11px; } }
+@media (prefers-reduced-motion: no-preference) { .hero-copy .hero-qr { animation-delay: .4s; } }
+
+.hero-copy { max-width: 760px; }
+.hero-title-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.hero-title-row h1 { min-width: 0; }
+.hero-title-row .hero-qr { flex: 0 0 auto; flex-direction: column; gap: 7px; margin: 0; padding: 10px; text-align: center; }
+.hero-title-row .hero-qr strong { font-size: 11px; }
+.hero-title-row .hero-qr small { display: none; }
+@media (min-width: 601px) { .hero-title-row .hero-qr { display: none; } }
+@media (max-width: 850px) and (min-width: 601px) { .hero-title-row { gap: 15px; } .hero-title-row h1 { font-size: 48px; } .hero-title-row .hero-qr-image { width: 88px; height: 88px; } }
+@media (max-width: 600px) {
+  .hero-title-row { gap: 12px; align-items: center; }
+  .hero-title-row h1 { flex: 1; font-size: clamp(22px, 6vw, 36px); letter-spacing: -.7px; line-height: 1.45; }
+  .hero-title-row .hero-qr { padding: 5px; border-radius: 9px; }
+  .hero-title-row .hero-qr-image { width: clamp(56px, 16vw, 80px); height: auto; aspect-ratio: 1; }
+  .hero-title-row .hero-qr > span { display: none; }
+  .hero-title-row .underline-swoosh { left: 85px; width: 80px; height: 5px; }
+}

@@ -9,3 +9,5 @@ next-env.d.ts
 .DS_Store
 public/assets/*.html
 public/assets/*_files/
+
+.seed-backups/
