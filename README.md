@@ -20,7 +20,7 @@ See `.env.example` for all variables. Keep `.env.local` private.
 
 - `MONGODB_URI`, `MONGODB_DB`: database connection and database name (`100ads`). The database account needs read/write and index creation permissions for this database. Session and login attempt collections use TTL indexes.
 - Admin accounts and password hashes are stored in MongoDB (`admin_users`). Run `npm run admin:password` to create or reset an administrator; this does not write login credentials into environment files. Changing a password invalidates previous sessions.
-- `APP_URL`: exact browser origin, for example `https://100advertising.com`. Used to check write request origins. Production requires HTTPS for secure session cookies.
+- `APP_URL`: exact browser origin, for example `https://100advertising.com`. Optional additional trusted origin for write requests. The current request origin and the project’s Vercel deployment/branch/production domains are also accepted. Production accepts HTTPS origins only and requires HTTPS for secure session cookies.
 - `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`: R2 S3 API credentials scoped to the image bucket with object read/write permission.
 - `R2_PUBLIC_URL`: HTTPS custom domain connected to the bucket, or an enabled public `r2.dev` URL. Images must be publicly readable through this URL.
 
